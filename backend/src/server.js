@@ -1,8 +1,11 @@
 import express from "express";
 import path from "path";
+import { clerkMiddleware } from '@clerk/express'
+import { connectDB } from "./config/db.js";
 const app = express();
 import {ENV} from "./config/env.js";
 const __dirname = path.resolve();
+app.use(clerkMiddleware());
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "server is running fine" });
 });
@@ -17,6 +20,7 @@ if(ENV.NODE_ENV === "production"){
     })
 }
 
-app.listen(3000, () => {
+app.listen(3000, "0.0.0.0",() => {
   console.log("server is running on port 3000");
+  connectDB();
 });
