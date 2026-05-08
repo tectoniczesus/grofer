@@ -4,11 +4,12 @@ import { clerkMiddleware } from '@clerk/express'
 import { connectDB } from "./config/db.js";
 const app = express();
 import {ENV} from "./config/env.js";
+import { start } from "repl";
 const __dirname = path.resolve();
 app.use(clerkMiddleware());
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "server is running fine" });
-});
+})
 
 // making ready for the deployment
 if(ENV.NODE_ENV === "production"){
@@ -20,7 +21,11 @@ if(ENV.NODE_ENV === "production"){
     })
 }
 
-app.listen(3000, "0.0.0.0",() => {
-  console.log("server is running on port 3000");
-  connectDB();
-});
+const startServer = async()=>{
+  await connectDB();
+  app.listen(ENV.PORT,()=>{
+    console.log(`server is running on port ${ENV.PORT}`);
+  })
+}
+
+startServer();
