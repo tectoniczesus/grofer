@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { createProduct,getAllProducts,updateProduct } from "../controller/admin.controller.js";
-import { adminOnly, protectRoute } from "../middleware/auth.middleware.js";
+import { adminOnly, protectRoute, upload } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
 router.use(protectRoute, adminOnly);
 
-router.post("/products", createProduct);
+router.post("/products", upload.array("images",3),createProduct);
 router.get("/products", getAllProducts);
-router.put("/products/:id", updateProduct);
+router.put("/products/:id",upload.array("images",3), updateProduct);
 
 export default router;
