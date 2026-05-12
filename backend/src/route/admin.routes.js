@@ -1,5 +1,13 @@
-import {Router} from "express";
-import { createProduct } from "../controller/admin.controller.js";
+import { Router } from "express";
+import { createProduct,getAllProducts,updateProduct } from "../controller/admin.controller.js";
+import { adminOnly, protectRoute } from "../middleware/auth.middleware.js";
+
 const router = Router();
-router.post("/products",protectRoute, adminOnly,createProduct);
+
+router.use(protectRoute, adminOnly);
+
+router.post("/products", createProduct);
+router.get("/products", getAllProducts);
+router.put("/products/:id", updateProduct);
+
 export default router;

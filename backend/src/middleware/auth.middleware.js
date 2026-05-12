@@ -1,7 +1,7 @@
 import {requireAuth} from "@clerk/express";
-import {User} from "../models/user.models.js";
+import User from "../models/user.models.js";
 import {ENV} from "../config/env.js";
-export const proctectRoute = [
+export const protectRoute = [
     requireAuth(),
     async(req,res,next)=>{
   try {
@@ -17,3 +17,10 @@ export const proctectRoute = [
   }
     }
 ]
+export const adminOnly = (req,res,next)=>{
+  if(!req.user) return res.status(401).json({message:"Unauthorized-user not found"});
+  if(req.user.role !== ENV.ADMIN_EMAIL){
+    return res.status(403).json({message:"Forbidden-access denied"});
+  }
+  next();
+}
