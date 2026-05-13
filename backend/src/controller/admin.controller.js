@@ -45,4 +45,36 @@ export async function getAllProducts(_,res){
         res.status(500).json({message:"Internal server error"});
     }
 }
-export async function updateProduct(req,res){}
+export async function updateProduct(req,res){
+try {
+    const{id} = req.params;
+    const{name,description,price,stock,category} = req.body;
+    const product = await Product.findById(id);
+    if(!product){
+        return res.status(404).json({message:"Product not found"});
+        
+    }
+    if(name) product.name = name;
+    if(description) product.description = description;
+    if(price) product.price = parseFloat(price);
+    if(stock!==undefined) product.stock = parseInt(stock);
+    if(category) product.category = category;
+   if(req.files && req.files.length>0){
+    if(req.files.length>3){
+        return res.status(400).json({message:"maximum 3 images are allowed"});
+    }
+    const uploadPromises = req.file.map((file)=>{
+        return cloudinary.uploader.upload(file.path,{
+            folder:"products",
+        });
+    });
+    const uploadResults = await Promise.all(uploadPromises);
+    product.images = uploadPromises.map((result)=>result.secure_url);
+   }
+     await product.save();
+    res.status(200).json(product);
+} catch (error) {
+    console.error("Error in updating product:",error);
+    res.status(500).json({message:"Internal server error"});
+}
+}
