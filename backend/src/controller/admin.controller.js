@@ -36,5 +36,13 @@ export async function createProduct(req,res){
         
     }
 }
-export async function getAllProducts(req,res){}
+export async function getAllProducts(_,res){
+    try {
+        const products = await Product.find().sort({createdAt:-1});
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Error in fetching products:",error);
+        res.status(500).json({message:"Internal server error"});
+    }
+}
 export async function updateProduct(req,res){}
