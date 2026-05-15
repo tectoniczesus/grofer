@@ -1,4 +1,4 @@
-import {User}from "../models/user.models.js"
+import User from "../models/user.models.js"
 export async function addAddress(req,res){
 try {
     const {label, fullName, streetAddress, city, state, zipCode, phoneNumber, isDefault}  = req.body;
@@ -91,7 +91,7 @@ export async function addToWishlist(req,res){
         res.status(500).json({error:"internal server error"});
     }
 }
-export async function removeFromWishlists(req,res){
+export async function removeFromWishlist(req,res){
     try {
         const{productId} = req.params;
         const user = req.user;
