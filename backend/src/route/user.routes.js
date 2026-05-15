@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {addAddress ,deleteAddress,updateAddress,getAddress} from "../controller/user.controller.js";
+import {addAddress ,deleteAddress,updateAddress,getAddress,addToWishlist,removeFromWishlist,getWishlist} from "../controller/user.controller.js";
 import {protectRoute} from "../middleware/auth.middleware.js";
 const router = Router();
 router.use(protectRoute);
