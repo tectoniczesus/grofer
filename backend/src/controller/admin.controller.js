@@ -1,6 +1,7 @@
 import cloudinary from "../config/cloudinary.js";
-import Product from "../models/products.models.js";
-import Order from "../models/order.models.js";
+import {Product} from "../models/products.models.js";
+import {Order} from "../models/order.models.js";
+import User from "../models/user.models.js";
 export async function createProduct(req,res){
     try {
         const {name,description,price,stock,category} = req.body;
@@ -116,4 +117,41 @@ export async function updateOrderStatus(req,res){
         res.status(500).json({message:"Internal server error"});
     }
 
+}
+
+
+export async function getAllCustomers(_,res){
+try {
+    const customer = await User.find().sort({createdAt:-1});
+    res.status(200).json(customer);
+} catch (error) {
+    console.error("Error in getting customers:",error);
+    res.status(500).json({message:"Internal server error"});
+}
+}
+
+export async function getDashboardStats(req,res){
+try {
+    const totalOrder = await Order.countDocuments();
+    const revenueResult = await Order.aggregate([
+        {
+            $group:{
+                _id:null,
+                total:{$sum:"$totalPrice"},
+            },
+        },
+    ]);
+    const totalRevenue = revenueResult[0]?.total || 0;
+    const totalCustomers = await User.countDocuments();
+    const totalProducts = await Product.countDocuments();
+    res.status(200).json({
+        totalCustomers,
+        totalOrder,
+        totalRevenue,
+        totalProducts
+    })
+} catch (error) {
+    console.error("Error in fetching dashboard stats:",error);
+    res.status(500).json({message:"Internal server error"});
+}
 }
