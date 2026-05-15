@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { createProduct,getAllProducts,updateProduct,getAllOrders,updateOrderStatus } from "../controller/admin.controller.js";
-import { adminOnly, protectRoute, upload } from "../middleware/auth.middleware.js";
+import { createProduct,getAllProducts,updateProduct,getAllOrders,updateOrderStatus, getAllCustomers, getDashboardStats } from "../controller/admin.controller.js";
+import { adminOnly, protectRoute} from "../middleware/auth.middleware.js";
+import {upload} from "../middleware/multer.middleware.js";
 
 const router = Router();
 
@@ -13,5 +14,9 @@ router.put("/products/:id",upload.array("images",3), updateProduct);
 
 router.get("/orders",getAllOrders);
 router.patch("/orders/:orderId/status",updateOrderStatus);
+
+
+router.get("/customers",getAllCustomers);
+router.get("/stats",getDashboardStats);
 
 export default router;

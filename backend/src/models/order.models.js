@@ -64,7 +64,7 @@ const orderSchema = new mongoose.Schema({
     orderItems:[orderItemSchema],
     shippingAddress:{
         type:shippingAddressSchema,
-        required
+        required:true,
     },
     paymentResult:{
         id: String,
