@@ -6,14 +6,14 @@ export async function createProduct(req,res){
     try {
         const {name,description,price,stock,category} = req.body;
         if(!name||!description||!price||!stock||!category) {
-            return res.status(400).json({message:"All fields are required"});
+            return res.status(400).json({error:"All fields are required"});
         }
         if(!req.files || req.files.length === 0){
-            return res.status(400).json({message:"At least one image is required"});
+            return res.status(400).json({error:"At least one image is required"});
 
         }
         if(req.files.length > 3){
-            return res.status(400).json({message:"maximum 3 images are allowed"});
+            return res.status(400).json({error:"maximum 3 images are allowed"});
         }
         const uploadPromises = req.files.map((file)=>{
             return cloudinary.uploader.upload(file.path,{
@@ -34,7 +34,7 @@ export async function createProduct(req,res){
         res.status(200).json(product);
     } catch (error) {
         console.error("Error creating product:",error);
-        res.status(500).json({message:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
         
     }
 }
@@ -44,7 +44,7 @@ export async function getAllProducts(_,res){
         res.status(200).json(products);
     } catch (error) {
         console.error("Error in fetching products:",error);
-        res.status(500).json({message:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
     }
 }
 export async function updateProduct(req,res){
@@ -53,7 +53,7 @@ try {
     const{name,description,price,stock,category} = req.body;
     const product = await Product.findById(id);
     if(!product){
-        return res.status(404).json({message:"Product not found"});
+        return res.status(404).json({error:"Product not found"});
         
     }
     if(name) product.name = name;
@@ -63,7 +63,7 @@ try {
     if(category) product.category = category;
    if(req.files && req.files.length>0){
     if(req.files.length>3){
-        return res.status(400).json({message:"maximum 3 images are allowed"});
+        return res.status(400).json({error:"maximum 3 images are allowed"});
     }
     const uploadPromises = req.file.map((file)=>{
         return cloudinary.uploader.upload(file.path,{
@@ -77,7 +77,7 @@ try {
     res.status(200).json(product);
 } catch (error) {
     console.error("Error in updating product:",error);
-    res.status(500).json({message:"Internal server error"});
+    res.status(500).json({error:"Internal server error"});
 }
 }
 
@@ -96,12 +96,12 @@ export async function updateOrderStatus(req,res){
         const{orderId} = req.params;
         const{status} = req.body;
         if(!["pending","shipped","delivered"].includes(status)){
-            return res.status(400).json({message:"Invalid status value"});
+            return res.status(400).json({error:"Invalid status value"});
 
         }
         const order = await Order.findById(orderId);
         if(!order){
-            return res.status(404).json({message:"Order not found"});
+            return res.status(404).json({error:"Order not found"});
         }
         order.status = status;
         if(status=="shipped" && !order.shippedAt){
@@ -114,7 +114,7 @@ export async function updateOrderStatus(req,res){
         res.status(200).json({message:"Order status updated successfully",order});
     } catch (error) {
         console.error("Error in updating order status:",error);
-        res.status(500).json({message:"Internal server error"});
+        res.status(500).json({error:"Internal server error"});
     }
 
 }
@@ -126,7 +126,7 @@ try {
     res.status(200).json(customer);
 } catch (error) {
     console.error("Error in getting customers:",error);
-    res.status(500).json({message:"Internal server error"});
+    res.status(500).json({error:"Internal server error"});
 }
 }
 
@@ -152,6 +152,6 @@ try {
     })
 } catch (error) {
     console.error("Error in fetching dashboard stats:",error);
-    res.status(500).json({message:"Internal server error"});
+    res.status(500).json({error:"Internal server error"});
 }
 }

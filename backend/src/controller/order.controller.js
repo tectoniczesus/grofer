@@ -6,15 +6,15 @@ try {
     const user = req.user;
     const {orderItems, shippingAddress, paymentResult, totalPrice } = req.body;
     if(!orderItems || orderItems.length === 0){
-        return res.status(400).json({message:"no order found"});
+        return res.status(400).json({error:"no order found"});
     }
     for (const items of orderItems){
         const product = await Product.findById(items.product._id);
         if(!product){
-            return res.status(404).json({message:`Product ${items.name} not found`});
+            return res.status(404).json({error:`Product ${items.name} not found`});
         }
         if(product.stock < items.quantity){
-         res.status(400).json({message:`Insufficient stock for ${product.name}`});
+         res.status(400).json({error:`Insufficient stock for ${product.name}`});
         }
 
     }

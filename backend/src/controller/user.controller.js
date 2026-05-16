@@ -4,7 +4,7 @@ try {
     const {label, fullName, streetAddress, city, state, zipCode, phoneNumber, isDefault}  = req.body;
     const user = req.user;
     if(!fullName || !streetAddress || !city || !state || !zipCode){
-        return res.status(400).json({message:"required fields are missing"});
+        return res.status(400).json({error:"required fields are missing"});
     }
     //If a new address is being marked as default
     //then all existing addresses of that user are changed to non-default
@@ -18,7 +18,7 @@ try {
         label, fullName, streetAddress, city, state, zipCode, phoneNumber, isDefault:isDefault || false
     });
     await user.save();
-    res.status(201).json({message:"address added successfully",address:user.addresses});
+    res.status(201).json({error:"address added successfully",address:user.addresses});
 } catch (error) {
     console.error("Error adding address",error);
     res.status(500).json({error:"internal server error"});
@@ -41,7 +41,7 @@ export async function updateAddress(req,res){
         const user = req.user;
         const address = user.addresses.id(addressId);
         if(!address){
-            return res.status(404).json({message:"address not found"});
+            return res.status(404).json({error:"address not found"});
         }
         if(isDefault){
             user.addresses.forEach((addr)=>{
@@ -96,7 +96,7 @@ export async function removeFromWishlist(req,res){
         const{productId} = req.params;
         const user = req.user;
         if(!user.wishlist.includes(productId)){
-            return res.status(400).json({message:"product not found in wishlist"});
+            return res.status(400).json({error:"product not found in wishlist"});
         }
         user.wishlist.pull(productId);
         await user.save();
