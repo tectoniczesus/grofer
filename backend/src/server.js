@@ -6,6 +6,8 @@ import { serve } from "inngest/express";
 import adminRoutes from "./route/admin.routes.js";
 import userRoutes from "./route/user.routes.js";
 import orderRoutes from "./route/order.routes.js"
+import reviewRoutes from "./route/review.routes.js"
+import productRoutes from "./route/product.routes.js"
 import { functions, inngest } from "./config/inngest.js";
 const app = express();
 import {ENV} from "./config/env.js";
@@ -17,6 +19,8 @@ app.use("/api/inngest",serve({client:inngest,functions}));
 app.use("/api/admin",adminRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/order",orderRoutes);
+app.use("/api/review",reviewRoutes);
+app.use("/api/product",productRoutes);
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "server is running fine" });
 })
