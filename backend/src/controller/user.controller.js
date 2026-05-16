@@ -18,7 +18,7 @@ try {
         label, fullName, streetAddress, city, state, zipCode, phoneNumber, isDefault:isDefault || false
     });
     await user.save();
-    res.status(201).json({error:"address added successfully",address:user.addresses});
+    res.status(201).json({message:"address added successfully",address:user.addresses});
 } catch (error) {
     console.error("Error adding address",error);
     res.status(500).json({error:"internal server error"});
