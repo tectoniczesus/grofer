@@ -3,9 +3,11 @@ import path from "path";
 import { clerkMiddleware } from '@clerk/express'
 import { connectDB } from "./config/db.js";
 import { serve } from "inngest/express";
+import cors from "cors";
 import adminRoutes from "./route/admin.routes.js";
 import userRoutes from "./route/user.routes.js";
 import orderRoutes from "./route/order.routes.js"
+import cartRoutes from "./route/cart.routes.js"
 import reviewRoutes from "./route/review.routes.js"
 import productRoutes from "./route/product.routes.js"
 import { functions, inngest } from "./config/inngest.js";
@@ -15,12 +17,14 @@ import { start } from "repl";
 const __dirname = path.resolve();
 app.use(express.json());
 app.use(clerkMiddleware());
+app.use(cors({origin:ENV.CLIENT_URL,credentials:true}));
 app.use("/api/inngest",serve({client:inngest,functions}));
 app.use("/api/admin",adminRoutes);
 app.use("/api/user",userRoutes);
 app.use("/api/order",orderRoutes);
 app.use("/api/review",reviewRoutes);
 app.use("/api/product",productRoutes);
+app.use("/api/cart",cartRoutes);
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "server is running fine" });
 })
