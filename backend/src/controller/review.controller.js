@@ -64,7 +64,7 @@ try {
     }
     const productId = review.productId;
     await Review.findByIdAndDelete(productId);
-    const review = await Review.find({productId});
+    const reviews = await Review.find({productId});
     const totalRating = reviews.reduce((sum,rev)=>sum + rev.rating,0);
     await Product.findByIdAndUpdate(
         productId,

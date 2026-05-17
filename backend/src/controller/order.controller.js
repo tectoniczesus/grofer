@@ -1,6 +1,6 @@
 import User from "../models/user.models.js";
-import Review from "../models/review.models.js";
-import Product from "../models/products.models.js";
+import {Review} from "../models/review.models.js";
+import {Product} from "../models/products.models.js";
 export async function createOrder(req,res){
 try {
     const user = req.user;
