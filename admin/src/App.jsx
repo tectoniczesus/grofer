@@ -1,20 +1,27 @@
-import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/react'
-import React from 'react'
-
+import {Navigate, Route, Routes} from "react-router";
+import LoginPage from "./pages/LoginPage";
+import {useAuth} from "@clerk/react";
+import DashboardLayout from "./layout/DashboardLayout";
+import DashboardPage from "./pages/DashboardPage";
+import ProductsPage from "./pages/ProductsPage";
+import CustomersPage from "./pages/CustomersPage";
+import OrdersPage from "./pages/OrdersPage";
 function App() {
+  const {isSignedIn,isLoaded} = useAuth();
+   if(!isLoaded) return null;
   return (
-    <div>
-      <h1>home page</h1>
-       <header>
-        <Show when="signed-out">
-          <SignInButton />
-          <SignUpButton />
-        </Show>
-        <Show when="signed-in">
-          <UserButton />
-        </Show>
-      </header>
-    </div>
+
+    <Routes>
+     <Route path="/login" element = {isSignedIn ? <Navigate to={"/dashboard"}/>:<LoginPage/>}/>
+     <Route path="/" element={isSignedIn ? <DashboardLayout/> : <Navigate to={"/login"}/>}>
+       <Route index element={<Navigate to ={"dashboard"} />}/>
+       <Route path = "dashboard" element = {<DashboardPage/>} />
+       <Route path = "products" element = {<ProductsPage/>} />
+       <Route path = "customers" element = {<CustomersPage/>} />
+       <Route path = "orders" element = {<OrdersPage/>} />
+
+     </Route>
+    </Routes>
   )
 }
 
