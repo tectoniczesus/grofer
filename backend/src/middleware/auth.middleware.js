@@ -7,7 +7,7 @@ export const protectRoute = [
   try {
     const clerkID = req.auth().userId;
     if(!clerkID) return res.status(401).json({message:"Unauthorized-token invalid"});
-    const user = await User.findOne({clerkId});
+    const user = await User.findOne({clerkID});
     if(!user) return res.status(404).json({message:"User not found"});
     req.user = user;
     next();
@@ -19,7 +19,7 @@ export const protectRoute = [
 ]
 export const adminOnly = (req,res,next)=>{
   if(!req.user) return res.status(401).json({message:"Unauthorized-user not found"});
-  if(req.user.role !== ENV.ADMIN_EMAIL){
+  if(req.user.email !== ENV.ADMIN_EMAIL){
     return res.status(403).json({message:"Forbidden-access denied"});
   }
   next();

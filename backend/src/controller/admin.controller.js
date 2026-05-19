@@ -83,8 +83,8 @@ try {
 
 export async function getAllOrders(req,res) {
     try {
-        const order = await Order.find().populate("user" ,"name email").populate("orderItems.product").sort({createAt:-1});
-        res.status(200).json(order);
+        const orders = await Order.find().populate("user" ,"name email").populate("orderItems.product").sort({createAt:-1});
+        res.status(200).json({orders});
     } catch (error) {
         console.error("error in getting all orders",error);
         res.status(500).json({error:"Internal server error"});
@@ -122,8 +122,8 @@ export async function updateOrderStatus(req,res){
 
 export async function getAllCustomers(_,res){
 try {
-    const customer = await User.find().sort({createdAt:-1});
-    res.status(200).json(customer);
+    const customers = await User.find().sort({createdAt:-1});
+    res.status(200).json({customers});
 } catch (error) {
     console.error("Error in getting customers:",error);
     res.status(500).json({error:"Internal server error"});
