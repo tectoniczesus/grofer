@@ -24,14 +24,28 @@ function ProductsPage() {
   })
 
   const createProductMutation = useMutation({
-
+   mutationFn: productApi.create,
+   onSuccess:()=>{
+    closeModal();
+    queryClient.invalidateQueries({queryKey:["products"]})
+   },
   });
-  const updateProductMutation = useMutation({
 
+  //FIXME: not able to update products and all
+  const updateProductMutation = useMutation({
+    mutationFn: productApi.update,
+    onSuccess:()=>{
+      closeModal();
+      queryClient.invalidateQueries({queryKey:["products"]})
+    },
   });
 
   const deleteProductMutation = useMutation({
-
+    mutationFn:productApi.delete,
+    onSuccess:()=>{
+      closeModal();
+      queryClient.invalidateQueries({queryKey:["products"]})
+    },
   });
 
   const closeModal = ()=>{
