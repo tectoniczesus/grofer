@@ -11,6 +11,10 @@ export const productApi = {
     update: async({id,form})=>{
         const {data} = await axiosInstance.put(`/admin/products/${id}`,form);
         return data;
+    },
+    delete: async(productId)=>{
+     const{data} = await axiosInstance.delete(`/admin/product/${productId}`);
+     return data;
     }
 };
 export const orderApi = {

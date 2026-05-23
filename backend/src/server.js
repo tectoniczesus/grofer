@@ -11,10 +11,10 @@ import cartRoutes from "./route/cart.routes.js"
 import reviewRoutes from "./route/review.routes.js"
 import productRoutes from "./route/product.routes.js"
 import { functions, inngest } from "./config/inngest.js";
-const app = express();
 import {ENV} from "./config/env.js";
 import { start } from "repl";
 const __dirname = path.resolve();
+const app = express();
 app.use(express.json());
 app.use(clerkMiddleware());
 app.use(cors({origin:ENV.CLIENT_URL,credentials:true}));

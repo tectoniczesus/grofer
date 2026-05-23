@@ -22,16 +22,31 @@ function ProductsPage() {
     queryKey:["products"],
     queryFn: productApi.getAll,
   })
-
+  //Working find
   const createProductMutation = useMutation({
-
+   mutationFn: productApi.create,
+   onSuccess:()=>{
+    closeModal();
+    queryClient.invalidateQueries({queryKey:["products"]})
+   },
   });
+
+  //FIXME: not able to update products and all
+  //DONE
   const updateProductMutation = useMutation({
-
+    mutationFn: productApi.update,
+    onSuccess:()=>{
+      closeModal();
+      queryClient.invalidateQueries({queryKey:["products"]})
+    },
   });
-
+  //FIXME:delete is not working
   const deleteProductMutation = useMutation({
-
+    mutationFn:productApi.delete,
+    onSuccess:()=>{
+      closeModal();
+      queryClient.invalidateQueries({queryKey:["products"]})
+    },
   });
 
   const closeModal = ()=>{
@@ -85,7 +100,7 @@ function ProductsPage() {
 
     if(images.length > 0) images.forEach((image)=> formDataToSend.append("images",image));
     if (editingProduct) {
-      updateProductMutation.mutate({ id: editingProduct._id, formData: formDataToSend });
+      updateProductMutation.mutate({ id: editingProduct._id, form: formDataToSend });
     } else {
       createProductMutation.mutate(formDataToSend);
     }
