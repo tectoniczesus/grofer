@@ -99,7 +99,7 @@ function ProductsPage() {
 
     if(images.length > 0) images.forEach((image)=> formDataToSend.append("images",image));
     if (editingProduct) {
-      updateProductMutation.mutate({ id: editingProduct._id, formData: formDataToSend });
+      updateProductMutation.mutate({ id: editingProduct._id, form: formDataToSend });
     } else {
       createProductMutation.mutate(formDataToSend);
     }
