@@ -41,6 +41,7 @@ function ProductsPage() {
     },
   });
   //FIXME:delete is not working
+  //DONE
   const deleteProductMutation = useMutation({
     mutationFn:productApi.delete,
     onSuccess:()=>{
