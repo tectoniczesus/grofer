@@ -22,7 +22,7 @@ function ProductsPage() {
     queryKey:["products"],
     queryFn: productApi.getAll,
   })
-
+  //Working find
   const createProductMutation = useMutation({
    mutationFn: productApi.create,
    onSuccess:()=>{
@@ -32,6 +32,7 @@ function ProductsPage() {
   });
 
   //FIXME: not able to update products and all
+  //DONE
   const updateProductMutation = useMutation({
     mutationFn: productApi.update,
     onSuccess:()=>{
@@ -39,7 +40,7 @@ function ProductsPage() {
       queryClient.invalidateQueries({queryKey:["products"]})
     },
   });
-
+  //FIXME:delete is not working
   const deleteProductMutation = useMutation({
     mutationFn:productApi.delete,
     onSuccess:()=>{
