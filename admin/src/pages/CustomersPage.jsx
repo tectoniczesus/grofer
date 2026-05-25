@@ -49,8 +49,10 @@ function CustomersPage() {
                       <td className="flex items-center gap-3">
                         <div className="avatar placeholder">
                           <div className="bg-primary text-primary-content rounded-full w-12">
-                            {/* email profile pic  is not showing up */}
-                            <img src={customer.imageUrl} alt={customer.fullName}  className="w-12 h-12 rounded-full"/>
+                            {/* email profile pic  is not showing up 
+                            //DONE
+                            */}
+                            <img src={customer.imageURL} alt={customer.fullName}  className="w-12 h-12 rounded-full"/>
                           </div>
                         </div>
                         <div className="font-semibold">
