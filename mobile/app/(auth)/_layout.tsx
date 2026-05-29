@@ -9,8 +9,8 @@ export default function AuthLayout() {
     // getting user and logging user in console too
     // only maximum dept limit reached error is comming gonna need to fix that
     
-    if(isSignedIn){
-        return <Redirect href={"/"}/>
-    }
+    // if(isSignedIn){
+    //     return <Redirect href={"/"}/>
+    // }
     return <Stack screenOptions={{headerShown:false}}/>
 }
