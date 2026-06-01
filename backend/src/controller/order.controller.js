@@ -1,6 +1,7 @@
 import User from "../models/user.models.js";
 import {Review} from "../models/review.models.js";
 import {Product} from "../models/products.models.js";
+import {Order} from "../models/order.models.js";
 export async function createOrder(req,res){
 try {
     const user = req.user;
@@ -21,7 +22,7 @@ try {
 
     const order = await Order.create({
         user: user._id,
-        clerkId: user.clerkId,
+        clerkId: user.clerkID,
         orderItems,
         shippingAddress,
         paymentResult,
@@ -40,8 +41,8 @@ try {
 }
 export async function getUserOrder(req,res){
 try {
-    const order = await Order.find({clerkId:req.user.clerkId}).populate("orderItems.product").sort({createAt:-1});
-    const orderId = order.map((order)=> order._id);
+    const orders = await Order.find({clerkId:req.user.clerkID}).populate("orderItems.product").sort({createdAt:-1});
+    const orderId = orders.map((order)=> order._id);
     const reviews = await Review.find({orderId:{$in:orderId}});
     const reviewOrderIds = new Set(reviews.map((review)=> review.orderId.toString()));
 
@@ -49,7 +50,7 @@ try {
         orders.map(async (order)=>{
             return {
                 ...order.toObject(),
-                hasReviewed: reviewedOrderIds.has(order._id.toString()),
+                hasReviewed: reviewOrderIds.has(order._id.toString()),
             };
         })
     );
