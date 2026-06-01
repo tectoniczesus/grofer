@@ -29,7 +29,7 @@ const useWishlist = ()=>{
 
     const removeFromWishlistMutation = useMutation({
         mutationFn: async(productId: string)=>{
-            const {data} = await api.delete<{wishlist: string[]}>(`/users.wishlist/${productId}`);
+            const {data} = await api.delete<{wishlist: string[]}>(`/user/wishlist/${productId}`);
             return data.wishlist;
         },
         onSuccess:()=> queryClient.invalidateQueries({queryKey:["wishlist"]}),
