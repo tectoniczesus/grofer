@@ -13,7 +13,7 @@ const order = await Order.findById(orderId);
 if(!order){
     return res.status(404).json({error:"Order not found"});
 }
-   if(order.clerkId !== user.clerkId){
+   if(order.clerkId !== user.clerkID){
     return res.status(403).json({error:"Not authorized to review this order"});
    }
    if(order.status !=="delivered"){
