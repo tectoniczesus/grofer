@@ -123,6 +123,7 @@ const ProductGrid = ({products, isLoading, isError}: ProductGridProps) => {
       renderItem={renderProduct}
       keyExtractor={(item) => item._id}
       numColumns = {2}
+      columnWrapperStyle={{justifyContent: 'space-between'}}
       showsVerticalScrollIndicator = {false}
       scrollEnabled = {false}
       ListEmptyComponent ={NoProductFound}
