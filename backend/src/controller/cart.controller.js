@@ -2,7 +2,7 @@ import { Cart } from "../models/cart.models.js";
 import { Product } from "../models/products.models.js";
 export async function getCart(req, res) {
   try {
-    let cart = await Cart.findOne({ clerkId: req.user.clerkId }).populate(
+    let cart = await Cart.findOne({ clerkId: req.user.clerkID }).populate(
       "items.product",
     );
 
@@ -10,7 +10,7 @@ export async function getCart(req, res) {
       const user = req.user;
       cart = await Cart.create({
         user: user._id,
-        clerkId: user.clerkId,
+        clerkId: user.clerkID,
         items: [],
       });
     }
@@ -30,12 +30,12 @@ export async function addToCart(req, res) {
     if (product.stock < quantity) {
       return res.status(400).json({ error: "Insufficient stock" });
     }
-    let cart = await Cart.findOne({ clerkId: req.user.clerkId });
+    let cart = await Cart.findOne({ clerkId: req.user.clerkID });
     if (!cart) {
       const user = req.user;
       cart = await Cart.create({
         user: user._id,
-        clerkId: user.clerkId,
+        clerkId: user.clerkID,
         items: [],
       });
     }
@@ -65,7 +65,7 @@ export async function updateCart(req, res) {
   if (quantity < 1) {
     return res.status(400).json({ error: "Quantity must be at least 1" });
   }
-  const cart = await Cart.findOne({clerkId:req.user.clerkId});
+  const cart = await Cart.findOne({clerkId:req.user.clerkID});
   if(!cart){
     return res.status(404).json({error:"Cart not found"});
   }
@@ -77,7 +77,7 @@ export async function updateCart(req, res) {
   if(!product){
     return res.status(404).json({error:"Product not found"});
   }
-  if(product < quantity){
+  if(product.stock < quantity){
     return res.status(400).json({error:"Insufficient quantity"});
   }
   cart.items[itemIndex].quantity = quantity;
@@ -91,7 +91,7 @@ export async function updateCart(req, res) {
 export async function removeFromCart(req, res) {
     try {
         const {productId} = req.params;
-        const cart = await Cart.findOne({clerkId:req.user.clerkId});
+        const cart = await Cart.findOne({clerkId:req.user.clerkID});
         if(!cart){
             return res.status(404).json({error:"Cart not found"});
         }
@@ -106,7 +106,7 @@ export async function removeFromCart(req, res) {
 }
 export async function clearCart(req, res) {
   try {
-      const cart = await Cart.findOne({clerkId: req.user.clerkId});
+      const cart = await Cart.findOne({clerkId: req.user.clerkID});
   if(!cart){
     return res.status(404).json({error:"Cart not found"});
   }
