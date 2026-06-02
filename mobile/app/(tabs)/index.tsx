@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { useState, useMemo } from 'react'
 import ProductGrid from '@/components/ProductGrid'
 import useProducts from '@/hooks/useProducts'
+import * as Sentry from '@sentry/react-native';
+import { Button } from 'react-native'
 const CATEGORIES = [
   { name: "All", icon: "grid-outline" as const },
   { name: "Electronics", image: require("@/assets/images/electronics.png") },
@@ -97,7 +99,9 @@ const ShopScreen = () => {
             })}
           </ScrollView>
          </View>
-        
+          {/* <Button title='Try!' onPress={ () => { Sentry.captureException(new Error('First error')) }}/> */}
+
+      
 
         <View className='px-6 mb-6'>
           <View className='flex-row items-center justify-between mb-4'>
