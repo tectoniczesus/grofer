@@ -18,7 +18,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.kunalsoni.grofer"
     },
     "web": {
       "output": "static",
@@ -41,7 +42,15 @@
       "expo-font",
       "expo-web-browser",
       "@clerk/expo",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "grofer-react-native",
+          "organization": "yeti-rd"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
