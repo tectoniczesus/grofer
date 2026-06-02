@@ -4,6 +4,7 @@ import React from 'react'
 import SafeScreen from '@/components/SafeScreen'
 import { useAuth,useUser } from '@clerk/expo';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 const MENU_ITEMS = [
   { id: 1, icon: "person-outline", title: "Edit Profile", color: "#3B82F6", action: "/profile" },
   { id: 2, icon: "list-outline", title: "Orders", color: "#10B981", action: "/orders" },
@@ -17,6 +18,7 @@ const ProfileScreen = () => {
 
    const handleMenuPress = (action: (typeof MENU_ITEMS)[number]["action"])=>{
     if(action === "/profile") return;
+    router.push(action);
    }
 
   return (
@@ -94,7 +96,7 @@ const ProfileScreen = () => {
             className="flex-row items-center justify-between py-2"
             activeOpacity={0.7}
             //TODO: need to add the router.push function
-            //onPress={() => router.push("/privacy-security")}
+            onPress={() => router.push("/privacy-security")}
           >
             <View className="flex-row items-center">
               <Ionicons name="shield-checkmark-outline" size={22} color="#FFFFFF" />
