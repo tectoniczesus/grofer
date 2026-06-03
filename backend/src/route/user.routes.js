@@ -5,8 +5,8 @@ const router = Router();
 router.use(protectRoute);
 router.post("/address",addAddress);
 router.get("/address",getAddress);
-router.put("/address",updateAddress);
-router.delete("/address",deleteAddress);
+router.put("/address/:addressId",updateAddress);
+router.delete("/address/:addressId",deleteAddress);
 
 
 router.post("/wishlist",addToWishlist);
