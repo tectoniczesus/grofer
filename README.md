@@ -168,8 +168,8 @@ GET /product/:id
 ```text
 POST   /user/address
 GET    /user/address
-PUT    /user/address
-DELETE /user/address
+PUT    /user/address/:addressId
+DELETE /user/address/:addressId
 
 POST   /user/wishlist
 GET    /user/wishlist
