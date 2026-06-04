@@ -2,7 +2,7 @@ import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator, Alert
 import { Product } from '@/types';
 import useWishlist from '@/hooks/useWishlist';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from '@/.expo/types/router';
+import { router } from 'expo-router';
 import useCart from '@/hooks/useCart';
 interface ProductGridProps{
   isLoading: boolean;
@@ -34,7 +34,7 @@ const ProductGrid = ({products, isLoading, isError}: ProductGridProps) => {
     className = "bg-surface rounded-3xl overflow-hidden mb-3"
     style={{width: '48%'}}
     activeOpacity={0.8}
-    // onPress = {()=> router.push(`/product/${product._id}`)}
+     onPress = {()=> router.push(`/product/${product._id}`)}
     >
     <View className = "relative">
 

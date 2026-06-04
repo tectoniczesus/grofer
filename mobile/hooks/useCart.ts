@@ -13,6 +13,8 @@ const useCart = () => {
     onSuccess: ()=> queryClient.invalidateQueries({queryKey: ["cart"]})
   })
 
+  
+
 return {
     addToCart: addToCartMutation.mutate,
     isAddingToCart: addToCartMutation.isPending,
