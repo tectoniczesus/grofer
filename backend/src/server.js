@@ -10,6 +10,7 @@ import orderRoutes from "./route/order.routes.js"
 import cartRoutes from "./route/cart.routes.js"
 import reviewRoutes from "./route/review.routes.js"
 import productRoutes from "./route/product.routes.js"
+import paymentRoutes from "./route/payments.routes.js"
 import { functions, inngest } from "./config/inngest.js";
 import {ENV} from "./config/env.js";
 import { start } from "repl";
@@ -25,6 +26,7 @@ app.use("/api/order",orderRoutes);
 app.use("/api/review",reviewRoutes);
 app.use("/api/product",productRoutes);
 app.use("/api/cart",cartRoutes);
+app.use("/api/payment",paymentRoutes);
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "server is running fine" });
 })
