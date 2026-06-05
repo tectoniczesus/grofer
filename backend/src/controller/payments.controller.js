@@ -4,15 +4,22 @@ import User from "../models/user.models.js"
 import { Product } from "../models/products.models.js"
 import { Order } from "../models/order.models.js"
 import { Cart } from "../models/cart.models.js"
+import { err } from "inngest/types"
 
 const stripe = new Stripe(ENV.STRIPE_SECRET_KEY);
+const MAX_METADATA_PRODUCT_IDS = 10;
+const MAX_METADATA_VALUE_LENGTH = 500;
+
+function toMetadataValue(value) {
+    return String(value ?? "").slice(0, MAX_METADATA_VALUE_LENGTH);
+}
 
 export async function createPaymentIntent(req,res) {
     try {
         const {cartItems, shippingAddress} = req.body;
         const user = req.user;
 
-        if (!cartItems || !shippingAddress) {
+        if (!Array.isArray(cartItems) || cartItems.length === 0 || !shippingAddress) {
             return res.status(400).json({error:"Cart is empty"});
         }
         let subtotal = 0;
@@ -63,11 +70,25 @@ export async function createPaymentIntent(req,res) {
                 enabled:true,
             },
             metadata:{
-                clerkId:user.clerkID,
-                userId:user._id.toString(),
-                orderItems: JSON.stringify(validatedItems),
-                shippingAddress:JSON.stringify(shippingAddress),
-                totalPrice: total.toFixed(2),
+                clerkId: toMetadataValue(user.clerkID),
+                userId: toMetadataValue(user._id),
+                itemCount: toMetadataValue(validatedItems.length),
+                totalQuantity: toMetadataValue(validatedItems
+                    .reduce((sum, item) => sum + item.quantity, 0)
+                ),
+                productIds: toMetadataValue(validatedItems
+                    .slice(0, MAX_METADATA_PRODUCT_IDS)
+                    .map((item) => item.product)
+                    .join(",")
+                ),
+                moreItems: toMetadataValue(Math.max(
+                    validatedItems.length - MAX_METADATA_PRODUCT_IDS,
+                    0
+                )),
+                shippingCity: toMetadataValue(shippingAddress.city),
+                shippingState: toMetadataValue(shippingAddress.state),
+                shippingZipCode: toMetadataValue(shippingAddress.zipCode),
+                totalPrice: toMetadataValue(total.toFixed(2)),
             },
 
 
@@ -81,5 +102,50 @@ export async function createPaymentIntent(req,res) {
 }
 
 export async function handleWebhook(req,res) {
-    
+    const sig = req.headers["stripe-signature"];
+    let event;
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, ENV.STRIPE_WEBHOOK_SECRET);
+    } catch (error) {
+        console.error("Webhook signature verification failed",error.message);
+        return res.status(400).json(`Webhook Error: ${error.message}`);   
+    }
+    if(event.type === "payment_intent.succeeded"){
+        const paymentIntent = event.data.object;
+        console.log("Payment succeeded", paymentIntent.id);
+        try {
+            const{userId,clerkID,orderItems,shippingAddress,totalPrice}=paymentIntent.metadata;
+            //checking if order already exit or not
+            const exitingOrder = await Order.findOne({"paymentResult.id":paymentIntent.id})
+            if(exitingOrder){
+                console.log("Order already exits for payments:",paymentIntent.id);
+                return res.json({received:true})
+            }
+            //if not than create order
+            const order = await Order.create({
+                user:userId,
+                clerkId,
+                orderItems:JSON.parse(orderItems),
+                shippingAddress:JSON.parse(shippingAddress),
+                paymentResult:{
+                    id:paymentIntent.id,
+                    status:"succeeded",
+                },
+                totalPrice:parseFloat(totalPrice),
+            });
+            //update product stock
+            const items = JSON.parse(orderItems);
+            for(const item of items){
+                await Product.findByIdAndUpdate(item.product,{
+                    $inc:{stock:-item.quantity},
+                });
+            }
+            //getting the webhooks from stripe
+        } catch (error) {
+            
+        }
+        
+    }
+
+    res.json({received:true});
 }
