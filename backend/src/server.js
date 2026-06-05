@@ -14,8 +14,16 @@ import paymentRoutes from "./route/payments.routes.js"
 import { functions, inngest } from "./config/inngest.js";
 import {ENV} from "./config/env.js";
 import { start } from "repl";
-const __dirname = path.resolve();
 const app = express();
+const __dirname = path.resolve();
+
+app.use("/api/payment",(req,res,next)=>{
+  if(req.originalUrl === "/api/payment/webhook"){
+    express.raw({type:"application/json"})(req,res,next)
+  }else{
+    express.json()(req,res,next)
+  }
+},paymentRoutes);
 app.use(express.json());
 app.use(clerkMiddleware());
 app.use(cors({origin:ENV.CLIENT_URL,credentials:true}));
@@ -26,7 +34,6 @@ app.use("/api/order",orderRoutes);
 app.use("/api/review",reviewRoutes);
 app.use("/api/product",productRoutes);
 app.use("/api/cart",cartRoutes);
-app.use("/api/payment",paymentRoutes);
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "server is running fine" });
 })
