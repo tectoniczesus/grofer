@@ -20,6 +20,7 @@ This README describes everything currently built in the project. It should be up
 - Multer file handling
 - Inngest background functions
 - CORS and dotenv configuration
+ - Stripe payments and webhook handling
 
 ### Admin Dashboard
 
@@ -98,6 +99,7 @@ grofer/
 - Review creation and deletion.
 - Inngest endpoint mounted at `/api/inngest`.
 - Production mode serves the built admin dashboard from `admin/dist`.
+ - Payments integration using Stripe: create payment intents and a webhook handler for asynchronous events.
 
 ### Admin Dashboard
 
@@ -154,6 +156,13 @@ PATCH  /admin/orders/:orderId/status
 
 GET    /admin/customers
 GET    /admin/stats
+
+### Payments
+
+```text
+POST  /payments/create-intent   # create a Stripe payment intent (protected)
+POST  /payments/webhook         # Stripe webhook endpoint (public)
+```
 ```
 
 ### Products
@@ -218,6 +227,7 @@ CLOUDNARY_CLOUD_NAME=your_cloudinary_cloud_name
 INNGEST_SIGNING_KEY=your_inngest_signing_key
 ADMIN_EMAIL=admin@example.com
 CLIENT_URL=http://localhost:5173
+STRIPE_SECRET_KEY=your_stripe_secret_key
 ```
 
 Note: the backend currently reads `CLOUDNARY_CLOUD_NAME` with this spelling.
@@ -369,4 +379,5 @@ Use this section to keep track of major project changes.
 
 ```text
 2026-06-02 - Added initial root README covering backend, admin, and mobile work completed so far.
+2026-06-06 - Updated README to include payments/Stripe endpoints, webhook notes, and dependency/script verification across backend, admin, and mobile.
 ```
