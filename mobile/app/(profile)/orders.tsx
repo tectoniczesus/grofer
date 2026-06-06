@@ -10,6 +10,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { capitalizeFirstLetter, formateDate, getStatusColor } from "@/lib/util";
 import RatingModal from "@/components/RatingModal";
+import { ErrorState } from "@/components/ErrorState";
+import {LoadingState} from "@/components/LoadingState";
+import { EmptyState } from "@/components/EmptyState";
 function OrdersScreen(){
     const{data:orders, isLoading, isError}  = useOrders();
     const{createReviewAsync,isCreatingReview}=useReviews();
@@ -71,10 +74,12 @@ function OrdersScreen(){
       </View>
 
       {isLoading ?
-       (<LoadingUI/>) : 
-       isError? (<ErrorUI/>) : 
+       (<LoadingState/>) : 
+       isError? (<ErrorState description="Please check your connection or try again later"
+       title="Something went wrong"
+       />) : 
        !orders || orders.length ===0 ?(
-        <EmptyUI/> 
+        <EmptyState description="Nothing to see here"title = "No orders yet"  /> 
       ): (
         <ScrollView
         className="flex-1"
@@ -138,12 +143,13 @@ function OrdersScreen(){
         </View>
         {order.status === "delivered" && (
           order.hasReviewed ? (
-            <View className="bg-primary/20 px-5 py-3 rounded-full flex-row items-center">
-              <Ionicons name="checkmark-circle" size={18} color="#1DB954"/>
-              <Text className="text-primary font-bold text-sm ml-2">Reviewed</Text>
+            <View className="bg-[#03fcb1] px-5 py-3 rounded-full flex-row items-center">
+              <Ionicons name="checkmark-circle" size={18} color="#1e9c5a"/>
+              <Text className="text-black font-bold text-sm ml-2">Reviewed</Text>
               </View>
+              
+              
           ):(
-
             <TouchableOpacity
             className="bg-primary px-5 py-3 rounded-full flex-row items-center"
             activeOpacity={0.7}
