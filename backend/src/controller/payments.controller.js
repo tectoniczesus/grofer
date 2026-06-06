@@ -60,7 +60,7 @@ export async function createPaymentIntent(req,res) {
                     userId: user._id.toString(),
                 },
             });
-            await User.findByIdAndUpdate(user._id,{stripeCustomerId:customer._id});
+            await User.findByIdAndUpdate(user._id,{stripeCustomerId:customer.id});
         }
         const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(total * 100),
@@ -69,27 +69,13 @@ export async function createPaymentIntent(req,res) {
             automatic_payment_methods:{
                 enabled:true,
             },
-            metadata:{
-                clerkId: toMetadataValue(user.clerkID),
-                userId: toMetadataValue(user._id),
-                itemCount: toMetadataValue(validatedItems.length),
-                totalQuantity: toMetadataValue(validatedItems
-                    .reduce((sum, item) => sum + item.quantity, 0)
-                ),
-                productIds: toMetadataValue(validatedItems
-                    .slice(0, MAX_METADATA_PRODUCT_IDS)
-                    .map((item) => item.product)
-                    .join(",")
-                ),
-                moreItems: toMetadataValue(Math.max(
-                    validatedItems.length - MAX_METADATA_PRODUCT_IDS,
-                    0
-                )),
-                shippingCity: toMetadataValue(shippingAddress.city),
-                shippingState: toMetadataValue(shippingAddress.state),
-                shippingZipCode: toMetadataValue(shippingAddress.zipCode),
-                totalPrice: toMetadataValue(total.toFixed(2)),
-            },
+             metadata: {
+        clerkId: user.clerkID,
+        userId: user._id.toString(),
+        orderItems: JSON.stringify(validatedItems),
+        shippingAddress: JSON.stringify(shippingAddress),
+        totalPrice: total.toFixed(2),
+      },
 
 
         });
@@ -102,7 +88,9 @@ export async function createPaymentIntent(req,res) {
 }
 
 export async function handleWebhook(req,res) {
+    console.log("HANDLE WEBHOOK STARTED");
     const sig = req.headers["stripe-signature"];
+    console.log("Stripe Signature:", !!sig);
     let event;
     try {
         event = stripe.webhooks.constructEvent(req.body, sig, ENV.STRIPE_WEBHOOK_SECRET);
@@ -142,10 +130,16 @@ export async function handleWebhook(req,res) {
             }
             //getting the webhooks from stripe
         } catch (error) {
+            console.error("Error processing webhook", error);
+            console.log("error",Error);
             
         }
         
+
     }
+    console.log("Webhook hit");
+    console.log(req.originalUrl);
+    console.log(req.headers);
 
     res.json({received:true});
 }

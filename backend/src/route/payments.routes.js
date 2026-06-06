@@ -7,6 +7,12 @@ const router = Router();
 router.post("/create-intent",protectRoute,createPaymentIntent);
 router.post("/webhook",handleWebhook)
 
+router.post("/webhook", (req, res, next) => {
+    console.log("WEBHOOK ROUTE HIT");
+    console.log("URL:", req.originalUrl);
+    next();
+}, handleWebhook);
+
 
 
 
