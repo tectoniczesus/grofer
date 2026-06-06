@@ -102,13 +102,24 @@ export async function handleWebhook(req,res) {
         const paymentIntent = event.data.object;
         console.log("Payment succeeded", paymentIntent.id);
         try {
-            const{userId,clerkID,orderItems,shippingAddress,totalPrice}=paymentIntent.metadata;
+            const{userId,clerkId,orderItems,shippingAddress,totalPrice}=paymentIntent.metadata;
             //checking if order already exit or not
             const exitingOrder = await Order.findOne({"paymentResult.id":paymentIntent.id})
             if(exitingOrder){
                 console.log("Order already exits for payments:",paymentIntent.id);
                 return res.json({received:true})
             }
+            console.log("Metadata:", paymentIntent.metadata);
+
+console.log({
+    userId,
+    clerkId,
+    orderItems,
+    shippingAddress,
+    totalPrice
+});
+console.log("Parsed Items:", JSON.parse(orderItems));
+console.log("Parsed Address:", JSON.parse(shippingAddress));
             //if not than create order
             const order = await Order.create({
                 user:userId,
