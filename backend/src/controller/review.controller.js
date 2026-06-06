@@ -2,6 +2,7 @@ import {Product }from "../models/products.models.js";
 import {Review} from "../models/review.models.js";
 import {Order} from "../models/order.models.js";
 
+
 export async function createReview(req,res){
 try {
     const {productId, rating,orderId} = req.body;
@@ -27,9 +28,13 @@ if(!order){
    }
    const review = await Review.findOneAndUpdate(
     {productId,userId:user._id},
-    {rating,order,productId,userId:user._id},
+    {rating,orderId,productId,userId:user._id},
     {new:true,upsert:true,runValidators:true}
-   );
+   ); 
+   console.log("user id->",user._id);
+   console.log("review from controller->", review);
+   
+   
    //new to update review, upsert to update or create one if not exit, validator to validate true one
    const reviews = await Review.find({productId});
    const totalRating = reviews.reduce((sum,rev)=> sum + rev.rating,0);
